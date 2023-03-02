@@ -1,5 +1,8 @@
 package com.example.skipboserver.datatypes;
 
+import com.example.skipboserver.datatypes.enums.Color;
+import com.example.skipboserver.datatypes.enums.Value;
+
 public class Card {
     private Value value;
     private Color color;

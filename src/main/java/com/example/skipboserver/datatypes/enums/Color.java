@@ -1,4 +1,4 @@
-package com.example.skipboserver.datatypes;
+package com.example.skipboserver.datatypes.enums;
 
 public enum Color {
     BLUE,
