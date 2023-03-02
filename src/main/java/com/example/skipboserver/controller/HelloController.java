@@ -1,4 +1,4 @@
-package com.example.skipboserver;
+package com.example.skipboserver.controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
