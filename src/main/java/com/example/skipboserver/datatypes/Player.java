@@ -58,6 +58,25 @@ public class Player {
         return card;
     }
 
+    public Stack<Card> getPlayerDeck(Pile deckNr){
+        Card card;
+        switch (deckNr) {
+            case ONE -> {
+                return playerDeckOne;
+            }
+            case TWO -> {
+                return playerDeckTwo;
+            }
+            case THREE -> {
+                return playerDeckThree;
+            }
+            case FOUR -> {
+                return playerDeckFour;
+            }
+            default -> throw new IllegalArgumentException("Invalid deck number");
+        }
+    }
+
     public void addCardToHand(Card card){
         hand.add(card);
     }
