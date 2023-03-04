@@ -1,8 +1,8 @@
 package com.example.skipboserver;
 
-import com.example.skipboserver.datatypes.Gameboard;
+import com.example.skipboserver.connection.Server;
+import com.example.skipboserver.management.Gameboard;
 import com.example.skipboserver.datatypes.Player;
-import com.example.skipboserver.datatypes.enums.Pile;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -22,9 +22,11 @@ public class HelloApplication extends Application {
 
     public static void main(String[] args) {
         //launch();
-        Player player = new Player("John");
-        Gameboard game = new Gameboard();
-        game.distributeDeckCards(player);
-        System.out.println(player.getPersonalDeckLength());
+        Server server = new Server(4200);
+        try{
+            server.start();
+        }catch (IOException e){
+            System.out.println(e);
+        }
     }
 }
