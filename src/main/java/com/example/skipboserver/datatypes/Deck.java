@@ -4,12 +4,21 @@ import com.example.skipboserver.datatypes.enums.Color;
 import com.example.skipboserver.datatypes.enums.Value;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Stack;
 
 public class Deck {
-    private ArrayList<Card> deck;
+    private Stack<Card> deck;
     public Deck(){
-        deck = new ArrayList<Card>();
+        deck = new Stack<>();
+    }
+
+    public Deck(Card[] cards){
+        deck = new Stack<>();
+        for (int i = cards.length - 1; i >= 0; i--) {
+            deck.push(cards[i]);
+        }
     }
 
     public void initializeDeck(){
@@ -19,12 +28,12 @@ public class Deck {
                     if(v==Value.JOKER){
                         continue;
                     }else {
-                        deck.add(new Card(v,c,false));
+                        deck.push(new Card(v,c,false));
                     }
                 }
             }
             for(int j=0;j<=6;j++){
-                deck.add(new Card(Value.JOKER,c,false));
+                deck.push(new Card(Value.JOKER,null,false));
             }
         }
 
@@ -35,9 +44,10 @@ public class Deck {
     }
 
     public Card drawCard(){
-        Card c = deck.get(0);
-        deck.remove(c);
-        return c;
+        return deck.pop();
     }
 
+    public int size(){
+        return this.deck.size();
+    }
 }

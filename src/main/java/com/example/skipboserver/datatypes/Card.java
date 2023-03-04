@@ -15,7 +15,7 @@ public class Card {
 
 
     public Value getValue() {
-        return value;
+        return this.value;
     }
 
     public void setValue(Value value) {
@@ -23,7 +23,7 @@ public class Card {
     }
 
     public Color getColor() {
-        return color;
+        return this.color;
     }
 
     public void setColor(Color color) {
@@ -31,7 +31,7 @@ public class Card {
     }
 
     public boolean isVisible() {
-        return visible;
+        return this.visible;
     }
 
     public void setVisible(boolean visible) {
