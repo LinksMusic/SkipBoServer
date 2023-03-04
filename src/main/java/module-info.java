@@ -1,6 +1,8 @@
 module com.example.skipboserver {
     requires javafx.controls;
     requires javafx.fxml;
+    requires org.json;
+    requires com.google.gson;
 
 
     opens com.example.skipboserver to javafx.fxml;
