@@ -1,5 +1,10 @@
-package com.example.skipboserver.datatypes;
+package com.example.skipboserver.management;
 
+import com.example.skipboserver.datatypes.Card;
+import com.example.skipboserver.datatypes.Deck;
+import com.example.skipboserver.datatypes.Gamestate;
+import com.example.skipboserver.datatypes.Player;
+import com.example.skipboserver.datatypes.enums.Phase;
 import com.example.skipboserver.datatypes.enums.Pile;
 import com.example.skipboserver.datatypes.enums.Value;
 
@@ -13,6 +18,7 @@ public class Gameboard {
     private Stack<Card> buildUpPileTwo;
     private Stack<Card> buildUpPileThree;
     private Stack<Card> buildUpPileFour;
+    private Gamestate gamestate;
     public Gameboard(){
         drawPile = new Deck();
         drawPile.initializeDeck();
@@ -50,6 +56,12 @@ public class Gameboard {
                     throw new IllegalArgumentException("Invalid deck number");
             }
         }
+        gamestate = new Gamestate(player, Phase.MAKEMOVE, false,card,switch(pileNr){
+            case ONE -> buildUpPileFour;
+            case TWO -> buildUpPileTwo;
+            case THREE -> buildUpPileThree;
+            case FOUR -> buildUpPileFour;
+        });
     }
 
     /**
@@ -69,5 +81,14 @@ public class Gameboard {
         }else if(dict.get(pileNr).size()==0 && card.getValue() != Value.ONE){
             return false;
         } else return card.getValue().getValue() - dict.get(pileNr).peek().getValue().getValue() == 1;
+    }
+
+    public void addCardToPlayerDeck(Player player, Pile pileNr, Card card){
+        player.addCardToPlayerDeck(pileNr,player.getCardFromHand(card));
+        gamestate = new Gamestate(player,Phase.ENDMOVE,player.getPersonalDeckLength() == 0,card,player.getPlayerDeck(pileNr));
+    }
+
+    public void addCardToPlayerHand(Player player, Card card){
+        player.addCardToHand(player.getCardFromPersonalDeck());
     }
 }
