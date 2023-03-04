@@ -6,11 +6,9 @@ import com.example.skipboserver.datatypes.enums.Value;
 public class Card {
     private Value value;
     private Color color;
-    private boolean visible;
-    public Card(Value value,Color color,boolean visible){
+    public Card(Value value,Color color){
         this.value = value;
         this.color = color;
-        this.visible = visible;
     }
 
 
@@ -28,13 +26,5 @@ public class Card {
 
     public void setColor(Color color) {
         this.color = color;
-    }
-
-    public boolean isVisible() {
-        return this.visible;
-    }
-
-    public void setVisible(boolean visible) {
-        this.visible = visible;
     }
 }

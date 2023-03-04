@@ -22,21 +22,20 @@ public class Deck {
     }
 
     public void initializeDeck(){
-        for(Color c: Color.values()){
-            for(int occurence=0;occurence<=3;occurence++){
-                for(Value v: Value.values()){
-                    if(v==Value.JOKER){
-                        continue;
-                    }else {
-                        deck.push(new Card(v,c,false));
-                    }
-                }
-            }
-            for(int j=0;j<=6;j++){
-                deck.push(new Card(Value.JOKER,null,false));
+        for(Value v: Value.values()) {
+            Color color = switch (v) {
+                case ONE, TWO, THREE, FOUR -> Color.BLUE;
+                case FIVE, SIX, SEVEN, EIGHT -> Color.GREEN;
+                case NINE, TEN, ELEVEN, TWELVE -> Color.RED;
+                default -> null;
+            };
+            for(int i = 0;i<12;i++){
+                deck.push(new Card(v, color));
             }
         }
-
+        for(int j=0;j<=18;j++){
+            deck.push(new Card(Value.JOKER,null));
+        }
     }
 
     public void shuffleDeck(){
