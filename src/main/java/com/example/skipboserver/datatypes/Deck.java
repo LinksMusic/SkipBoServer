@@ -46,6 +46,10 @@ public class Deck {
         return deck.pop();
     }
 
+    public void addCard(Card card){
+        deck.push(card);
+    }
+
     public int size(){
         return this.deck.size();
     }

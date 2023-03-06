@@ -94,9 +94,16 @@ public class Player {
     public Card getCardFromPersonalDeck(){
         return personalDeck.drawCard();
     }
+    public void addCardToPersonalDeck(Card card){
+        personalDeck.addCard(card);
+    }
 
     public int getPersonalDeckLength(){
        return personalDeck.size();
+    }
+
+    public int getHandLength(){
+        return this.hand.size();
     }
 
 }

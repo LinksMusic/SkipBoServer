@@ -10,20 +10,27 @@ import com.example.skipboserver.datatypes.enums.Value;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Queue;
 import java.util.Stack;
 
 public class Gameboard {
     private final Deck drawPile;
+    private HashMap<Pile,Stack<Card>> buildUpPiles;
     private Stack<Card> buildUpPileOne;
     private Stack<Card> buildUpPileTwo;
     private Stack<Card> buildUpPileThree;
     private Stack<Card> buildUpPileFour;
-    private Gamestate gamestate;
     public Gameboard(){
         drawPile = new Deck();
         drawPile.initializeDeck();
         drawPile.shuffleDeck();
+        buildUpPiles.put(Pile.ONE,buildUpPileOne);
+        buildUpPiles.put(Pile.TWO,buildUpPileTwo);
+        buildUpPiles.put(Pile.THREE,buildUpPileThree);
+        buildUpPiles.put(Pile.FOUR,buildUpPileFour);
     }
+
+
 
     public void distributeDeckCards(Player player){
         Card[] cards = new Card[30];
@@ -41,27 +48,39 @@ public class Gameboard {
      * @param pileNr BuildupPile to move the card to
      * @param card Card from either Hand or PlayerDeck
      */
-    public void addCardToBuildUpPile(Player player, Pile pileNr, Card card){
-        if(validCardMove(pileNr,card)){
-            switch(pileNr){
-                case ONE:
-                    buildUpPileOne.push(player.getCardFromHand(card));
-                case TWO:
-                    buildUpPileTwo.push(player.getCardFromHand(card));
-                case THREE:
-                    buildUpPileThree.push(player.getCardFromHand(card));
-                case FOUR:
-                    buildUpPileFour.push(player.getCardFromHand(card));
-                default:
-                    throw new IllegalArgumentException("Invalid deck number");
-            }
+    public boolean addCardToBuildupPile(Player player, Pile pileNr, Card card){
+        if (validCardMove(pileNr, card)) {
+            buildUpPiles.get(pileNr).push(player.getCardFromHand(card));
+            return true;
+        } else {
+            player.addCardToHand(card);
+            return false;
         }
-        gamestate = new Gamestate(player, Phase.MAKEMOVE, false,card,switch(pileNr){
-            case ONE -> buildUpPileFour;
-            case TWO -> buildUpPileTwo;
-            case THREE -> buildUpPileThree;
-            case FOUR -> buildUpPileFour;
-        });
+    }
+
+    public boolean addCardToBuildupPile(Player player, Pile pileNr, Pile playerDeck){
+        Card card = player.getCardFromPlayerDeck(playerDeck);
+        if(validCardMove(pileNr,card)){
+            buildUpPiles.get(pileNr).push(player.getCardFromPlayerDeck(pileNr));
+            return true;
+        }
+        else {
+            player.addCardToPlayerDeck(playerDeck, card);
+            return false;
+        }
+    }
+
+    public boolean addCardToBuildupPile(Player player, Pile pileNr){
+        Card card = player.getCardFromPersonalDeck();
+        if(validCardMove(pileNr,card)){
+            buildUpPiles.get(pileNr).push(card);
+            return true;
+        }
+        else {
+            //revert changes if unsuccessful
+            player.addCardToPersonalDeck(card);
+            return false;
+        }
     }
 
     /**
@@ -70,7 +89,7 @@ public class Gameboard {
      * @param card either Hand or PlayerDeck
      * @return true if move is valid, else false
      */
-    public boolean validCardMove(Pile pileNr,Card card) {
+    private boolean validCardMove(Pile pileNr,Card card) {
         HashMap<Pile,Stack<Card>> dict = new HashMap<>();
         dict.put(Pile.ONE,buildUpPileOne);
         dict.put(Pile.TWO,buildUpPileTwo);
@@ -83,12 +102,24 @@ public class Gameboard {
         } else return card.getValue().getValue() - dict.get(pileNr).peek().getValue().getValue() == 1;
     }
 
-    public void addCardToPlayerDeck(Player player, Pile pileNr, Card card){
-        player.addCardToPlayerDeck(pileNr,player.getCardFromHand(card));
-        gamestate = new Gamestate(player,Phase.ENDMOVE,player.getPersonalDeckLength() == 0,card,player.getPlayerDeck(pileNr));
+    public boolean gameOver(Player player){
+        return player.getPersonalDeckLength() == 0;
     }
 
-    public void addCardToPlayerHand(Player player, Card card){
-        player.addCardToHand(player.getCardFromPersonalDeck());
+    public void addCardToPlayerDeck(Player player, Pile pileNr, Card card){
+        player.addCardToPlayerDeck(pileNr,player.getCardFromHand(card));
     }
+
+    public ArrayList<Card> addCardToPlayerHand(Player player){
+        ArrayList<Card> out = new ArrayList<Card>();
+        Card card;
+        while(player.getHandLength() != 5){
+            card = drawPile.drawCard();
+            out.add(card);
+            player.addCardToHand(card);
+        }
+        return out;
+    }
+
+
 }
